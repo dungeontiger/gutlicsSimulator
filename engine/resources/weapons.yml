@@ -1,0 +1,69 @@
+# list of weapons
+scimitar:
+  type: melee
+  two-handed: false
+  damage: 1d6
+  damage_type: slashing
+  weight: 3
+  properties:
+    - finesse
+    - light
+short_bow:
+  type: ranged
+  damage: 1d6
+  two-handed: true
+  damage_type: piercing
+  weight: 2
+  range:
+    short: 80
+    long: 320
+  properties:
+    - range
+    - heavy
+    - ammunition
+long_bow:
+  type: ranged
+  damage: 1d8
+  two-handed: true
+  damage_type: piercing
+  weight: 2
+  range:
+    short: 150
+    long: 600
+  properties:
+    - range
+    - heavy
+    - ammunition
+spear:
+  type: melee
+  two-handed: false
+  damage: 1d6
+  damage_type: piercing
+  weight: 3
+  properties:
+    - range
+    - thrown
+    - versatile
+spear_2h:
+  type: melee
+  damage: 1d8
+  two-handed: true
+  damage_type: piercing
+  weight: 3
+  properties:
+    - range
+    - thrown
+    - versatile
+spear_ranged:
+  type: ranged
+  damage: 1d6
+  two-handed: false
+  damage_type: piercing
+  weight: 3
+  range:
+    short: 20
+    long: 60
+  properties:
+    - range
+    - thrown
+    - versatile
