@@ -21,11 +21,11 @@ class TestDice (unittest.TestCase):
     self.assertTrue(value <= 15 and value >= 6)
 
   """Roll 100 times and ensure that the min and max are rolled, its possible to fail but unlikely """
-  def testRoll100Times(self):
+  def testRoll200Times(self):
     roller = Dice()
     found1 = False
     found15 = False
-    for _ in range (0, 100):
+    for _ in range (0, 200):
       value = roller.roll(2,8,-1)
       self.assertTrue(value <= 15 and value >= 1)
       if value == 1:

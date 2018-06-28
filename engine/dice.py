@@ -1,5 +1,5 @@
 import random, re
-""" Perform all kinds of dice rols """
+""" Perform all kinds of dice rolls """
 class Dice:
 
   """ Roll dice and return the total """

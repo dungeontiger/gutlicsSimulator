@@ -1,0 +1,5 @@
+name: Crimson
+description: Collection of lowly goblins
+entities:
+  - goblin
+  - 3 goblin
