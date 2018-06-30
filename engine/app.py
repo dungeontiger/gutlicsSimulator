@@ -1,8 +1,12 @@
 """ Singleton object that holds all the info for the simulator """
 import os, yaml
 from engine.entity_def import EntityDef
+
+# TODO: make a get app method so that it acts like a singleton
+
 class App:
   def __init__(self):
+    # TODO: create a normal logger for software activities
     # read the entity definitions
     entityPath = 'engine/resources/entities'
     self.entityDefs = dict()

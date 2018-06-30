@@ -9,6 +9,8 @@ class Dice:
       sum = sum + random.randint(1, sides)
     return sum + modifier
 
+  # TODO: the d20 rolls must take a modifier and return both the roll and the modified roll
+
   """Short cut to roll a d20 """
   def d20(self):
     return self.roll(1,20,0)

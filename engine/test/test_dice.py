@@ -20,6 +20,8 @@ class TestDice (unittest.TestCase):
     value = roller.roll(1, 10, 5)
     self.assertTrue(value <= 15 and value >= 6)
 
+  # TODO: fix this test case somehow to make it more predictable, use a seed?
+  
   """Roll 100 times and ensure that the min and max are rolled, its possible to fail but unlikely """
   def testRoll200Times(self):
     roller = Dice()

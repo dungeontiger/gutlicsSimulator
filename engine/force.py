@@ -23,7 +23,14 @@ class Force:
             num = int(m[0])
             ent = m[1]
           for _ in range(0, num):
-            self.entities.append(Entity(app.getEntityDef(ent)))
+            self.entities.append(Entity(app.getEntityDef(ent), self.name))
+
+  def isDefeated(self):
+    # if any one entity is still fighting this force is not defeated
+    for e in self.entities:
+      if e.isStillFighting():
+        return False
+    return True
 
   def getName(self):
     return self.name
@@ -33,3 +40,10 @@ class Force:
 
   def getNumberOfEntities(self):
     return len(self.entities)
+
+  def getEntities(self):
+    return self.entities
+
+  #TODO: get total hit points
+  #TODO: get total EXP
+  
