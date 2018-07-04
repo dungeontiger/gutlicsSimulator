@@ -1,7 +1,9 @@
 import yaml, re
 from .entity import Entity
 
-""" Represents one side in a battle """
+""" 
+Represents one side in a battle 
+"""
 class Force:
   def __init__(self, file, app):
     # read the yaml file

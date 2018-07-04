@@ -35,3 +35,6 @@ class TestBattle(unittest.TestCase):
     print(highest)
     print(lowest)
     battle.end()
+
+if __name__ == '__main__':
+    unittest.main() 

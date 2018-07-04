@@ -1,9 +1,11 @@
-""" Singleton object that holds all the info for the simulator """
 import os, yaml
 from engine.entity_def import EntityDef
 
 # TODO: make a get app method so that it acts like a singleton
 
+""" 
+Singleton object that holds all the info for the simulator 
+"""
 class App:
   def __init__(self):
     # TODO: create a normal logger for software activities
@@ -18,5 +20,8 @@ class App:
             self.entityDefs[y['name']] = EntityDef(y)
     # read the weaspons
 
+  """
+  Get a particular entity definition
+  """
   def getEntityDef(self, name):
     return self.entityDefs[name]

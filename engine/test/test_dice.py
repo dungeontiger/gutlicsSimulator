@@ -46,14 +46,18 @@ class TestDice (unittest.TestCase):
   """Test d20 advantage roll"""
   def testD20Advantage(self):
     roller = Dice()
-    value = roller.d20Advantage()
-    self.assertTrue(value >= 1 and value <= 20)
+    # rolling multiple times ensure we hit all lines in test for coverage
+    for _ in range(1,21):
+      value = roller.d20Advantage()
+      self.assertTrue(value >= 1 and value <= 20)
 
   """Test d20 disadvantage roll"""
   def testD20Disadvantage(self):
     roller = Dice()
-    value = roller.d20Disadvantage()
-    self.assertTrue(value >= 1 and value <= 20)
+    # rolling multiple times ensure we hit all lines in test for coverage
+    for _ in range(1,21):
+      value = roller.d20Disadvantage()
+      self.assertTrue(value >= 1 and value <= 20)
 
   """Test rolling by string"""
   def testRollByString(self):

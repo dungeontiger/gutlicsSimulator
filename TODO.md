@@ -1,4 +1,4 @@
 Stuff To Do
 ==
 
-- dump gradle for make
+- make dice's methods static

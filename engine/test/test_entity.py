@@ -8,5 +8,8 @@ class TestEntity(unittest.TestCase):
     self.app = App()
 
   def testCreateGoblin(self):
-    e = Entity(self.app.getEntityDef('goblin'))
+    e = Entity(self.app.getEntityDef('goblin'), 'The Force')
     self.assertTrue(e.getMaxHP() >= 2 and e.getMaxHP() <= 12)
+
+if __name__ == '__main__':
+    unittest.main() 

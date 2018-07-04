@@ -1,7 +1,11 @@
 from .force import Force
 from .battle_logger import BattleLogger
 
-""" Manages a battle between forces """
+""" 
+Manages a battle between forces 
+Currently forces are limited to two
+In the future more than two forces will be allowed
+"""
 class Battle:
   def __init__(self, forces, app):
     # TODO: Assert only two forces for now
@@ -28,14 +32,19 @@ class Battle:
       for e in f.getEntities():
         self.battlelogger.msg(str(e.getHP()), 'hp', 0, '', f.getName(), e.getEntityDef().getName(), e.getName())
 
+  """
+  Returns the array of forces
+  """
   def getForces(self):
     return self.forces
 
-  """ Main loop for the battle """
+  """ 
+  Main loop for the battle 
+  """
   def start(self):
     # roll initiative for each creature
     # start the rounds, look until one force is defeated
-     # create the initiative map
+    # create the initiative map
     self.rollInitiative()
     initMap, lowestI, highestI = self.createInitMap()
     round = 0
@@ -44,24 +53,40 @@ class Battle:
      self.battlelogger.msg('Starting new round: ' + round)
      for i in range(highestI + 1, lowestI, -1):
        if i in initMap:
+         self.battlelogger.msg('Initiative tick: ' + i)
          el = initMap[i]
+         resolutions = list()
          for e in el:
            # this entity takes its turn, returns some messages to log
-           msgs = e.takeTurn(self.getEnemyForce(e))
+           msgs, rs = e.takeTurn(self.getEnemyForce(e))
+           resolutions.append(rs) # TODO: does this add the list
            for m in msgs:
-             self.battlelogger.msg(m[0], m[1], round, i, e.getForceName(), e.getEntityDef().getName(), e.getName())
+             self.battlelogger.entityMsg(m[1], m[2], m[0], round, i)
 
+  """
+  Tell each entity to roll its initative
+  """
   def rollInitiative(self):
     self.battlelogger.msg('Rolling Initiative')
     for f in self.forces:
       for e in f.getEntities():
         i = e.rollInitiative()
-        self.battlelogger.msg(str(i), 'initiative', 0, '', f.getName(), e.getEntityDef().getName(), e.getName())
+        self.battlelogger.entityMsg(str(i), 'initiative', e, 0, '')
 
+  """
+  Get the opposing force of an entity
+  """
   def getEnemyForce(self, e):
-    # TODO: find the oppostive force to the one this entity is in
+    # return the force that does not match the one this entity is in
+    for f in self.forces:
+      if f.getName() != e.getForceName():
+        return f
+    # TODO: This needs to be an exception
     return self.forces[0]
 
+  """
+  Determine if the battle is over or not
+  """
   def continueBattle(self):
     for f in self.forces:
       if f.isDefeated():
@@ -69,6 +94,10 @@ class Battle:
         #TODO: prevent infinite loop for now
     return False
 
+  """
+  Creates a map to manage initiative order
+  Key is the initative number
+  """
   def createInitMap(self):
     # make a map where the key  is the initiative number
     # each value is a list of entities that have this initiative and resolve simaltaneously
@@ -87,6 +116,9 @@ class Battle:
         a[i].append(e)
     return a, lowest, highest
 
+  """
+  End the battle
+  """
   def end(self):
     self.battlelogger.close()
    

@@ -1,3 +1,6 @@
+"""
+Calculates the modifier from a stat like str or dex
+"""
 def statMod(value):
   m = (value - 10) / 2
   # this accounts for negative bonus rounding

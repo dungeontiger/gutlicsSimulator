@@ -1,8 +1,12 @@
 import random, re
-""" Perform all kinds of dice rolls """
+""" 
+Perform all kinds of dice rolls 
+"""
 class Dice:
 
-  """ Roll dice and return the total """
+  """ 
+  Roll dice and return the total 
+  """
   def roll(self, numberOfDice, sides, modifier):
     sum = 0
     for _ in range(1, numberOfDice + 1):
@@ -11,11 +15,15 @@ class Dice:
 
   # TODO: the d20 rolls must take a modifier and return both the roll and the modified roll
 
-  """Short cut to roll a d20 """
+  """
+  Short cut to roll a d20 
+  """
   def d20(self):
     return self.roll(1,20,0)
 
-  """Roll d20 with advantage, roll two and return the highest """
+  """
+  Roll d20 with advantage, roll two and return the highest 
+  """
   def d20Advantage(self):
     roll1 = self.roll(1,20,0)
     roll2 = self.roll(1,20,0)
@@ -23,7 +31,9 @@ class Dice:
       return roll1
     return roll2
 
-  """Roll d20 with disadvantage, roll two and return the lowest """
+  """
+  Roll d20 with disadvantage, roll two and return the lowest 
+  """
   def d20Disadvantage(self):
     roll1 = self.roll(1,20,0)
     roll2 = self.roll(1,20,0)
@@ -31,7 +41,9 @@ class Dice:
       return roll1
     return roll2
 
-  """ split a string into the correct integer parts and return the roll e.g. 3d6+2 """
+  """ 
+  split a string into the correct integer parts and return the roll e.g. 3d6+2 
+  """
   def rollString(self, roll):
     # first remove spaces from string to make regex easy
     # TODO: Throw exception for bad string?

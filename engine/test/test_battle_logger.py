@@ -23,3 +23,5 @@ class TestBattleLogger(unittest.TestCase):
     self.assertIsNotNone(bl)
     bl.close()
     
+if __name__ == '__main__':
+    unittest.main() 

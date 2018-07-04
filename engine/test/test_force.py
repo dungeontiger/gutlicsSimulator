@@ -18,3 +18,6 @@ class TestForce(unittest.TestCase):
   def testNumberOfCreatures(self):
     force = Force('./engine/test/resources/forces/crimson.yaml', self.app)
     self.assertEqual(force.getNumberOfEntities(), 4)
+
+if __name__ == '__main__':
+    unittest.main() 

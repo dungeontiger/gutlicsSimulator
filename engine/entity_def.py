@@ -1,7 +1,9 @@
 from .alignment import Alignment
 from .dice import Dice
 from .util import *
-
+"""
+Represents one type of entity, stats from Monster Manual mostly
+"""
 class EntityDef:
   """ Encapsulates the definition of an enity """
   def __init__(self, yaml):

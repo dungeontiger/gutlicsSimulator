@@ -1,4 +1,7 @@
 from enum import Enum
+"""
+Enum for alignment
+"""
 class Alignment(Enum):
   lawful_good = 1
   chaotic_good = 2
