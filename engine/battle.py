@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from .force import Force
 from .battle_logger import BattleLogger
 
@@ -17,8 +19,8 @@ class Battle:
       self.forces.append(Force(f, app))
 
     # create a battle log with the name of the two forces
-    battlename = self.forces[0].getName() + ' vs ' + self.forces[1].getName()
-    self.battlelogger = BattleLogger(battlename)
+    self.battlename = self.forces[0].getName() + ' vs ' + self.forces[1].getName()
+    self.battlelogger = BattleLogger(self.battlename)
 
     # set the names of each entity
     for f in self.forces:
@@ -49,19 +51,29 @@ class Battle:
     initMap, lowestI, highestI = self.createInitMap()
     round = 0
     while self.continueBattle():
-     round = round + 1
-     self.battlelogger.msg('Starting new round: ' + round)
-     for i in range(highestI + 1, lowestI, -1):
-       if i in initMap:
-         self.battlelogger.msg('Initiative tick: ' + i)
-         el = initMap[i]
-         resolutions = list()
-         for e in el:
-           # this entity takes its turn, returns some messages to log
-           msgs, rs = e.takeTurn(self.getEnemyForce(e))
-           resolutions.append(rs) # TODO: does this add the list
-           for m in msgs:
-             self.battlelogger.entityMsg(m[1], m[2], m[0], round, i)
+      round = round + 1
+      # TODO: to prevent infinite loop go for 100 rounds
+      if (round > 100):
+        break
+      self.battlelogger.msg('Starting new round: ' + str(round))
+      for i in range(highestI + 1, lowestI, -1):
+        if i in initMap:
+          self.battlelogger.msg('Initiative tick: ' + str(i))
+          el = initMap[i]
+          resolutions = list()
+          for e in el:
+            if e.isStillFighting():
+              # this entity takes its turn, returns some messages to log
+              msgs, rs = e.takeTurn(self.getEnemyForce(e))
+              resolutions = resolutions + rs
+              for m in msgs:
+                self.battlelogger.entityMsg(m[2], m[1], m[0], round, i)
+          # all entities in this initiative tick had a chance, resolve the effects
+          resMsg = []
+          for r in resolutions:
+            resMsg = r.resolve()
+            for m in resMsg:
+              self.battlelogger.entityMsg(m[2], m[1], m[0], round, i)
 
   """
   Tell each entity to roll its initative
@@ -91,8 +103,7 @@ class Battle:
     for f in self.forces:
       if f.isDefeated():
         return False
-        #TODO: prevent infinite loop for now
-    return False
+    return True
 
   """
   Creates a map to manage initiative order
@@ -121,7 +132,14 @@ class Battle:
   """
   def end(self):
     self.battlelogger.close()
-   
+    # write out a battle summary
+    # TODO do configuration, should this place write out summary or should be other class?
+    with open('./logs/battles/' + self.battlename + '_summary_' + datetime.now().strftime('%Y-%m-%d_%H:%M:%S.%f')[:-3] + '.csv', 'w') as f:
+      f.write('FORCE\tENTITY\tSTATE\tHP\t\n')
+      for force in self.forces:
+        for e in force.getEntities():
+          f.write(force.getName() + '\t' + e.getName() + '\t' + e.getState().name + '\t' + str(e.getHP()) + '\n')
+      
     # Sizes and how much space they take up
     # T S M L H G
     # T 1/4 (4 per square)

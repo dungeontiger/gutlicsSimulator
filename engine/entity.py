@@ -1,6 +1,8 @@
-
+from .damage_type import DamageType
 from .entity_state import EntityState
 from .dice import Dice
+from .damage_effect import DamageEffect
+
 """
 Represents an instance of an entity def
 e.g., Goblin_23 of goblin
@@ -98,9 +100,9 @@ class Entity:
     resolutions = list()
     if self.targetEntity == None or not self.targetEntity.isStillFighting():
       self.targetEntity = enemyForce.getRandomAliveEntity()
-      msgs.append((self, 'select target', 'Selecting target ' + self.targetEntity.getName() + ' (' + enemyForce.getName() + ')'))
-    # the target can still be null if the force has not viable targets left
     if self.targetEntity != None:
+      msgs.append((self, 'select target', 'Selecting target ' + self.targetEntity.getName() + ' (' + enemyForce.getName() + ')'))
+      # the target can still be null if the force has not viable targets left
       # TODO: need to make a weapon or attack choice
       resolutions = self.makeWeaponAttack(self.targetEntity, None, enemyForce, msgs)
     return msgs, resolutions
@@ -119,15 +121,29 @@ class Entity:
       # roll critical hit damage and apply to resolution stack on target
       # TODO: damage modifiers
       dmg = self.dice.roll(2,6,0)
-      msgs.append((self, 'dealt damage', 'Dealt ' + dmg + ' to ' + self.targetEntity.getName() + ' (' + enemyForce.getName() + ') with fists'))
-      
+      msgs.append((self, 'dealt damage', 'Dealt ' + str(dmg) + ' to ' + self.targetEntity.getName() + ' (' + enemyForce.getName() + ') with fists'))
+      # TODO: replace with correct type from weapon
+      resolutions.append(DamageEffect(dmg, DamageType.bludgeoning, self.targetEntity))
     elif d20 + mods > target.getAC():
       # normal hit
       msgs.append((self, 'attack hit', 'Hit ' + self.targetEntity.getName() + ' (' + enemyForce.getName() + ') with fists'))
       # roll damage and apply to resolution stack on target
       dmg = self.dice.roll(1,6,0)
-      msgs.append((self, 'dealt damage', 'Dealt ' + dmg + ' to ' + self.targetEntity.getName() + ' (' + enemyForce.getName() + ') with fists'))
+      msgs.append((self, 'dealt damage', 'Dealt ' + str(dmg) + ' to ' + self.targetEntity.getName() + ' (' + enemyForce.getName() + ') with fists'))
+      # TODO: replace with correct type from weapon
+      resolutions.append(DamageEffect(dmg, DamageType.bludgeoning, self.targetEntity))
     else:
       # a swing and a miss!
       msgs.append((self, 'attack miss', 'Missed ' + self.targetEntity.getName() + ' (' + enemyForce.getName() + ') with fists'))
     return resolutions
+
+  def applyDamageEffect(self, effect):
+    # TODO: check for resistance and immunity
+    msgs = []
+    self.HP = self.HP - effect.getAmount()
+    msgs.append((self, 'damage taken', str(effect.getAmount())))
+    if (self.HP <= 0):
+      self.HP = 0
+      self.state = EntityState.dead
+      msgs.append((self, 'died', 'This entity is dead.'))
+    return msgs

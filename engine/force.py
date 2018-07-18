@@ -1,4 +1,4 @@
-import yaml, re
+import yaml, re, random
 from .entity import Entity
 
 """ 
@@ -45,6 +45,15 @@ class Force:
 
   def getEntities(self):
     return self.entities
+
+  def getRandomAliveEntity(self):
+    alive = []
+    for e in self.entities:
+      if e.isStillFighting():
+        alive.append(e)
+    if alive:
+      return random.choice(alive)
+    return None
 
   #TODO: get total hit points
   #TODO: get total EXP
