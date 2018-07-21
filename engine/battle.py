@@ -134,6 +134,7 @@ class Battle:
     self.battlelogger.close()
     # write out a battle summary
     # TODO do configuration, should this place write out summary or should be other class?
+    # TODO should be in the battle logger so it can have the same base file name
     with open('./logs/battles/' + self.battlename + '_summary_' + datetime.now().strftime('%Y-%m-%d_%H:%M:%S.%f')[:-3] + '.csv', 'w') as f:
       f.write('FORCE\tENTITY\tSTATE\tHP\t\n')
       for force in self.forces:

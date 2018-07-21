@@ -3,7 +3,7 @@ options="-a --omit=$omit -m"
 coverage erase
 coverage run $options engine.test.test_app
 coverage run $options engine.test.test_battle_logger
-#coverage run $options engine.test.test_battle
+coverage run $options engine.test.test_battle
 coverage run $options engine.test.test_dice
 coverage run $options engine.test.test_entity_def
 coverage run $options engine.test.test_entity
