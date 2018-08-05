@@ -1,11 +1,12 @@
 from .alignment import Alignment
 from .dice import Dice
 from .util import *
+from .weapon_library import WeaponLibrary
 """
 Represents one type of entity, stats from Monster Manual mostly
 """
 class EntityDef:
-  """ Encapsulates the definition of an enity """
+  """ Encapsulates the definition of an entity """
   def __init__(self, yaml):
     self.dice = Dice()
     self.name = yaml['name']
@@ -24,6 +25,13 @@ class EntityDef:
     # TODO: need to finish alignment
     if yaml['alignment'] == 'neutral evil':
       self.alignment = Alignment.neutral_evil
+    weaponLib = WeaponLibrary()
+    actions = yaml['actions']
+    for a in actions:
+      # each action itself is a dictionary
+      # there will only be one key
+      key = list(a.keys())[0]
+      wd = weaponLib.getWeapon(key)
 
   def rollHP(self):
     return self.dice.rollString(self.hd)

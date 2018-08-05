@@ -9,14 +9,13 @@ Currently forces are limited to two
 In the future more than two forces will be allowed
 """
 class Battle:
-  def __init__(self, forces, app):
+  def __init__(self, forces):
     # TODO: Assert only two forces for now
-    self.app = app
 
     # load forces, an array of file names
     self.forces = []
     for f in forces:
-      self.forces.append(Force(f, app))
+      self.forces.append(Force(f))
 
     # create a battle log with the name of the two forces
     self.battlename = self.forces[0].getName() + ' vs ' + self.forces[1].getName()

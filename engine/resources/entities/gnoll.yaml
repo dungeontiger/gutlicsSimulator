@@ -27,13 +27,11 @@ traits:
 languages:
   - gnoll
 actions:
-  - bite: 
-      to_hit: +4
-      damage: +2
-      dmg: 1d4 + 2 P
+#  - bite: 
+#      to_hit: +4
+#      damage: +2
+#      dmg: 1d4 + 2 P
   - spear:
-  - spear_ranged:
-  - spear_2h:
       to_hit: +4
       damage: +2
 #  strategy: flee, fight, etc...

@@ -1,17 +1,19 @@
 import yaml, re, random
+from .entity_library import EntityLibrary
 from .entity import Entity
 
 """ 
 Represents one side in a battle 
 """
 class Force:
-  def __init__(self, file, app):
+  def __init__(self, file):
     # read the yaml file
       with open(file, 'rb') as str:
         y = yaml.load(str.read())
         self.name = y['name']
         self.description = y['description']
         self.entities = list()
+        entityLib = EntityLibrary()
         # read in and process all the entities
         for e in y['entities']:
           # check for a number first, if there is create that many entities
@@ -25,7 +27,7 @@ class Force:
             num = int(m[0])
             ent = m[1]
           for _ in range(0, num):
-            self.entities.append(Entity(app.getEntityDef(ent), self.name))
+            self.entities.append(Entity(entityLib.getEntity(ent), self.name))
 
   def isDefeated(self):
     # if any one entity is still fighting this force is not defeated

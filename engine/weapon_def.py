@@ -29,7 +29,7 @@ class WeaponDef:
       if p.startswith('versatile'):
         self.versatile = True
         m = re.search(r"versatile \((.*)\)", p).groups()
-        self.versatileDamage = int(m[0])
+        self.versatileDamage = m[0]
 
   def rollDamage(self, modifier = 0, critical = False):
     # need to parse out dice to be able to do critical damage rolls

@@ -23,7 +23,7 @@ skills:
 senses:
   - darkvision: 60
   - passive_perception: 9
-abilities:
+traits:
   - nimble_escapse: disengage or hide as bonus action each turn
 languages:
   - common
