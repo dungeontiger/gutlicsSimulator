@@ -94,10 +94,10 @@ class Entity:
   def takeTurn(self, enemyForce):
     # a list of tuples, entity, message type and message
     # will be displayed in the battle log
-    msgs = list()
+    msgs = []
     # a list of things that happened to entities that needs to be resolved
     # at the end of the initiative tick
-    resolutions = list()
+    resolutions = []
     if self.targetEntity == None or not self.targetEntity.isStillFighting():
       self.targetEntity = enemyForce.getRandomAliveEntity()
     if self.targetEntity != None:
@@ -111,27 +111,24 @@ class Entity:
   Make an attack with a weapon
   """
   def makeWeaponAttack(self, target, weapon, enemyForce, msgs):
-    # TODO: mods come from the attack or weapon
-    mods = 0
-    resolutions = list()
+    weapon = self.selectWeapon()
+    resolutions = []
     d20 = self.dice.d20()
     if d20 == 20:
       # automatic hit, critical hit
       msgs.append((self, 'attack critical hit', 'Hit ' + self.targetEntity.getName() + ' (' + enemyForce.getName() + ') with fists'))
       # roll critical hit damage and apply to resolution stack on target
-      # TODO: damage modifiers
-      dmg = self.dice.roll(2,6,0)
+      dmg = weapon.rollDamage(True)
       msgs.append((self, 'dealt damage', 'Dealt ' + str(dmg) + ' to ' + self.targetEntity.getName() + ' (' + enemyForce.getName() + ') with fists'))
-      # TODO: replace with correct type from weapon
       resolutions.append(DamageEffect(dmg, DamageType.bludgeoning, self.targetEntity))
-    elif d20 + mods > target.getAC():
+    elif d20 + weapon.getToHitMod() >= target.getAC():
       # normal hit
       msgs.append((self, 'attack hit', 'Hit ' + self.targetEntity.getName() + ' (' + enemyForce.getName() + ') with fists'))
       # roll damage and apply to resolution stack on target
-      dmg = self.dice.roll(1,6,0)
+      dmg = weapon.rollDamage(False)
       msgs.append((self, 'dealt damage', 'Dealt ' + str(dmg) + ' to ' + self.targetEntity.getName() + ' (' + enemyForce.getName() + ') with fists'))
       # TODO: replace with correct type from weapon
-      resolutions.append(DamageEffect(dmg, DamageType.bludgeoning, self.targetEntity))
+      resolutions.append(DamageEffect(dmg, weapon.getDamageType(), self.targetEntity))
     else:
       # a swing and a miss!
       msgs.append((self, 'attack miss', 'Missed ' + self.targetEntity.getName() + ' (' + enemyForce.getName() + ') with fists'))
@@ -147,3 +144,12 @@ class Entity:
       self.state = EntityState.dead
       msgs.append((self, 'died', 'This entity is dead.'))
     return msgs
+
+  """
+  Choose which weapon to use, for now just use first melee weapon found
+  """
+  def selectWeapon(self):
+    for w in self.entityDef.getWeapons():
+      if (w.isMelee() == True):
+        return w
+    return None

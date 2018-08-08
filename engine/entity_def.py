@@ -2,6 +2,7 @@ from .alignment import Alignment
 from .dice import Dice
 from .util import *
 from .weapon_library import WeaponLibrary
+from .entity_weapon_attack import EntityWeaponAttack
 """
 Represents one type of entity, stats from Monster Manual mostly
 """
@@ -27,11 +28,13 @@ class EntityDef:
       self.alignment = Alignment.neutral_evil
     weaponLib = WeaponLibrary()
     actions = yaml['actions']
+    self.weapons = []
     for a in actions:
       # each action itself is a dictionary
       # there will only be one key
       key = list(a.keys())[0]
-      wd = weaponLib.getWeapon(key)
+      aa = a[key]
+      self.weapons.append(EntityWeaponAttack(weaponLib.getWeapon(key), aa['to_hit'], aa['damage']))
 
   def rollHP(self):
     return self.dice.rollString(self.hd)
@@ -56,3 +59,6 @@ class EntityDef:
 
   def getHD(self):
     return self.hd
+
+  def getWeapons(self):
+    return self.weapons

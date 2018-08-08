@@ -52,3 +52,6 @@ class WeaponDef:
 
   def getLongRange(self):
     return self.longRange
+
+  def isMelee(self):
+    return self.ammunition == False
