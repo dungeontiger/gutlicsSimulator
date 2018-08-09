@@ -2,6 +2,7 @@ from datetime import datetime
 
 from .force import Force
 from .battle_logger import BattleLogger
+from .battle_recorder import BattleRecorder
 
 """ 
 Manages a battle between forces 
@@ -21,7 +22,10 @@ class Battle:
     self.battlename = self.forces[0].getName() + ' vs ' + self.forces[1].getName()
     self.battlelogger = BattleLogger(self.battlename)
 
+    # record the start of the battle
+
     # set the names of each entity
+    # TODO: this should be pushed to the force class non?
     for f in self.forces:
       i = 0
       for e in f.getEntities():
@@ -43,20 +47,30 @@ class Battle:
   Main loop for the battle 
   """
   def start(self):
+    # record the start of the battle
+    self.battleRecorder = BattleRecorder()
+    self.battleRecorder.startBattle(self.battlename)
+    for f in self.forces:
+      for e in f.getEntities():
+        self.battleRecorder.spawn(e)
+
     # roll initiative for each creature
     # start the rounds, look until one force is defeated
     # create the initiative map
-    self.rollInitiative()
+    # TODO: roll each round
+    self.rollInitiative(0)
     initMap, lowestI, highestI = self.createInitMap()
     round = 0
     while self.continueBattle():
       round = round + 1
+      self.battleRecorder.setRound(round)
       # TODO: to prevent infinite loop go for 100 rounds
       if (round > 100):
         break
       self.battlelogger.msg('Starting new round: ' + str(round))
       for i in range(highestI + 1, lowestI, -1):
         if i in initMap:
+          self.battleRecorder.setInitTick(i)
           self.battlelogger.msg('Initiative tick: ' + str(i))
           el = initMap[i]
           resolutions = list()
@@ -73,11 +87,12 @@ class Battle:
             resMsg = r.resolve()
             for m in resMsg:
               self.battlelogger.entityMsg(m[2], m[1], m[0], round, i)
+    self.battleRecorder.endBattle(self.forces)
 
   """
   Tell each entity to roll its initative
   """
-  def rollInitiative(self):
+  def rollInitiative(self, r):
     self.battlelogger.msg('Rolling Initiative')
     for f in self.forces:
       for e in f.getEntities():

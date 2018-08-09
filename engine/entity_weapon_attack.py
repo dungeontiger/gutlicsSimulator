@@ -4,6 +4,9 @@ class EntityWeaponAttack:
     self.toHitMod = toHit
     self.damageMod = damage
 
+  def getName(self):
+    return self.weapon.getName()
+
   def getWeapon(self):
     return self.weapon
 
@@ -17,7 +20,7 @@ class EntityWeaponAttack:
     return self.weapon.isMelee()
 
   def rollDamage(self, criticalHit):
-    return self.rollDamage(criticalHit) + self.damageMod
+    return self.weapon.rollDamage(self.damageMod, criticalHit)
 
   def getDamageType(self):
     return self.weapon.getDamageType()

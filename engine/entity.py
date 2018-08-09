@@ -2,6 +2,7 @@ from .damage_type import DamageType
 from .entity_state import EntityState
 from .dice import Dice
 from .damage_effect import DamageEffect
+from .battle_recorder import BattleRecorder
 
 """
 Represents an instance of an entity def
@@ -21,6 +22,7 @@ class Entity:
     self.dice = Dice()
     # default the name to the entity defintiion
     self.name = self.getEntityDef().getName()
+    self.battleRecorder = BattleRecorder()
 
   """
   Is this entity still fighting
@@ -120,6 +122,7 @@ class Entity:
       # roll critical hit damage and apply to resolution stack on target
       dmg = weapon.rollDamage(True)
       msgs.append((self, 'dealt damage', 'Dealt ' + str(dmg) + ' to ' + self.targetEntity.getName() + ' (' + enemyForce.getName() + ') with fists'))
+      self.battleRecorder.criticalHits(self, weapon, dmg, target)
       resolutions.append(DamageEffect(dmg, DamageType.bludgeoning, self.targetEntity))
     elif d20 + weapon.getToHitMod() >= target.getAC():
       # normal hit
@@ -127,21 +130,24 @@ class Entity:
       # roll damage and apply to resolution stack on target
       dmg = weapon.rollDamage(False)
       msgs.append((self, 'dealt damage', 'Dealt ' + str(dmg) + ' to ' + self.targetEntity.getName() + ' (' + enemyForce.getName() + ') with fists'))
-      # TODO: replace with correct type from weapon
+      self.battleRecorder.hits(self, weapon, dmg, target)
       resolutions.append(DamageEffect(dmg, weapon.getDamageType(), self.targetEntity))
     else:
       # a swing and a miss!
       msgs.append((self, 'attack miss', 'Missed ' + self.targetEntity.getName() + ' (' + enemyForce.getName() + ') with fists'))
+      self.battleRecorder.misses(self, weapon, target)
     return resolutions
 
   def applyDamageEffect(self, effect):
     # TODO: check for resistance and immunity
     msgs = []
     self.HP = self.HP - effect.getAmount()
+    self.battleRecorder.takesDamage(self, effect.getAmount())
     msgs.append((self, 'damage taken', str(effect.getAmount())))
     if (self.HP <= 0):
       self.HP = 0
       self.state = EntityState.dead
+      self.battleRecorder.dies(self)
       msgs.append((self, 'died', 'This entity is dead.'))
     return msgs
 
